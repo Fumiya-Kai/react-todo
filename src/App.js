@@ -1,18 +1,7 @@
-import {useState, useEffect} from "react";
-import axios from "axios";
-
-const todoDataUrl = "http://localhost:3100/todos";
+import { useTodo } from "./hooks/useTodo";
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(todoDataUrl);
-      setTodoList(response.data);
-    }
-    fetchData();
-  }, []);
+  const { todoList } = useTodo();
 
   console.log("TODOリスト:", todoList);
 
