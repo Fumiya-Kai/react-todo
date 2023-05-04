@@ -5,6 +5,8 @@ function App() {
   const {
     todoList,
     addTodoListItem,
+    toggleTodoListItemStatus,
+    deleteTodoListItem
   } = useTodo();
 
   const inputEl = useRef(null);
@@ -33,28 +35,19 @@ function App() {
     <>
       <TodoTitle title="TODO進捗管理" as="h1" />
       <TodoAdd inputEl={inputEl} handleAddTodoListItem={handleAddTodoListItem} />
-      <TodoList todoList={inCompletedList} title="未完了TODOリスト" />
-      <TodoList todoList={completedList} title="完了TODOリスト" />
+      <TodoList todoList={inCompletedList} title="未完了TODOリスト" toggleTodoListItemStatus={toggleTodoListItemStatus} deleteTodoListItem={deleteTodoListItem} />
+      <TodoList todoList={completedList} title="完了TODOリスト" toggleTodoListItemStatus={toggleTodoListItemStatus} deleteTodoListItem={deleteTodoListItem} />
     </>
   );
 }
 
-const TodoAdd = ({ inputEl, handleAddTodoListItem }) => {
-  return (
-    <>
-      <textarea ref={inputEl} />
-      <button onClick={handleAddTodoListItem}>+ TODOを追加</button>
-    </>
-  );
-}
-
-const TodoList = ({todoList, title}) => {
+const TodoList = ({todoList, title, toggleTodoListItemStatus, deleteTodoListItem}) => {
   return (
     <>
       <TodoTitle title={title} as="h2" />
       <ul>
         {todoList.map((todo) => (
-          <TodoItem todo={todo} key={todo.id} />
+          <TodoItem todo={todo} key={todo.id} toggleTodoListItemStatus={toggleTodoListItemStatus} deleteTodoListItem={deleteTodoListItem} />
         ))}
       </ul>
     </>
@@ -70,14 +63,18 @@ const TodoTitle = ({title, as}) => {
   return <p>{title}</p>;
 };
 
-const TodoItem = ({todo}) => {
+const TodoItem = ({todo, toggleTodoListItemStatus, deleteTodoListItem}) => {
+  const handleToggleTodoListItemStatus =
+    () => toggleTodoListItemStatus(todo.id, todo.done);
+
+  const handleDeleteTodoListItem = () => deleteTodoListItem(todo.id);
   return (
     <li key={todo.id}>
       {todo.content}
-      <button>
+      <button onClick={handleToggleTodoListItemStatus}>
         {todo.done ? "未完了リストへ" : "完了リストへ"}
       </button>
-      <button>削除</button>
+      <button onClick={handleDeleteTodoListItem}>削除</button>
     </li>
   );
 };
